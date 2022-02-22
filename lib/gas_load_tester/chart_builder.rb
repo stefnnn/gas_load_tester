@@ -285,7 +285,7 @@ module GasLoadTester
                <th width="20%">Count</th> 
              </tr>
              #{errors.collect{|_key, _values| 
-               "<tr style="border: 1px solid black; border-collapse: collapse;">
+               "<tr style=\"border: 1px solid black; border-collapse: collapse;\">
                   <td>#{_key}</td>
                   <td>#{_values.count}</td>
                 </tr>"
