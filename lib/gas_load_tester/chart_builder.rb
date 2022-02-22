@@ -169,44 +169,46 @@ module GasLoadTester
       avg_time = test.summary_avg_time
       success = test.summary_success
       error = test.summary_error
-
-      "<div style=\"width: 100%; text-align: center; margin-top: 20px; margin-bottom: 20px;\">
-         <span style=\"align: center; font-weight: bold;\">Summary</span>
+      
+      <<~HTMLCODE
+      <div style="width: 100%; text-align: center; margin-top: 20px; margin-bottom: 20px;">
+         <span style="align: center; font-weight: bold;">Summary</span>
        </div>
-       <div style=\"width: 100%; display: flex;\">
-         <div style=\"width: 100%;\">
+       <div style="width: 100%; display: flex;">
+         <div style="width: 100%;">
          </div>
-         <div id=\"summary_time\" style=\"width: 100%; align: center;\">
-           <table style=\"width: 100%;\">
+         <div id="summary_time" style="width: 100%; align: center;">
+           <table style="width: 100%;">
              <tbody>
                <tr>
-                 <th style=\"font-weight: bold;\">Average</th>
+                 <th style="font-weight: bold;">Average</th>
                  <td>#{avg_time.round(4)} ms</td>
                </tr>
                <tr>
-                 <th style=\"font-weight: bold;\">Min/Max</th>
+                 <th style="font-weight: bold;">Min/Max</th>
                  <td>#{min_time.round(4)} / #{max_time.round(4)} ms</td>
                </tr>
              </tbody>
            </table>
          </div>
-         <div id=\"summary_data\" style=\"width: 100%; align: center;\">
-           <table style=\"width: 100%;\">
+         <div id="summary_data" style="width: 100%; align: center;">
+           <table style="width: 100%;">
              <tbody>
                <tr>
-                 <th style=\"font-weight: bold;\">Success</th>
+                 <th style="font-weight: bold;">Success</th>
                  <td>#{success}</td>
                </tr>
                <tr>
-                 <th style=\"font-weight: bold;\">Error</th>
+                 <th style="font-weight: bold;">Error</th>
                  <td>#{error}</td>
                </tr>
              </tbody>
            </table>
          </div>
-         <div style=\"width: 100%;\">
+         <div style="width: 100%;">
          </div>
-       </div>"
+        </div>
+      HTMLCODE
     end
 
     def build_chart(test)
@@ -272,26 +274,28 @@ module GasLoadTester
       errors = test.results.collect{|key,values| values.select{|node| node.pass == false}}.flatten
       errors = errors.group_by{|error| "#{error.error.class.to_s}: #{error.error.message}" }
       
-      "<div style=\"width: 100%; display: flex; margin-top: 30px;\">
-         <div style=\"width: 20%;\">
+      <<~HTMLCODE
+      <div style="width: 100%; display: flex; margin-top: 30px;">
+         <div style="width: 20%;">
          </div>
-         <div style=\"width: 100%;\">
-           <table style=\"width:100%; border: 1px solid black; border-collapse: collapse; text-align: center;\">
-             <tr style=\"border: 1px solid black; border-collapse: collapse;\">
-               <th width=\"80%\">Error</th>
-               <th width=\"20%\">Count</th> 
+         <div style="width: 100%;">
+           <table style="width:100%; border: 1px solid black; border-collapse: collapse; text-align: center;">
+             <tr style="border: 1px solid black; border-collapse: collapse;">
+               <th width="80%">Error</th>
+               <th width="20%">Count</th> 
              </tr>
              #{errors.collect{|_key, _values| 
-               "<tr style=\"border: 1px solid black; border-collapse: collapse;\">
+               "<tr style="border: 1px solid black; border-collapse: collapse;">
                   <td>#{_key}</td>
                   <td>#{_values.count}</td>
                 </tr>"
              }.join}
            </table>
          </div>
-         <div style=\"width: 20%;\">
+         <div style="width: 20%;">
          </div>
-       </div>"
+      </div>
+      HTMLCODE
     end
 
   end
