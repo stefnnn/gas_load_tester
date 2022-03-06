@@ -66,31 +66,37 @@ module GasLoadTester
     private
 
     def build_headpart
-      "<div style=\"width: 100%;text-align: center;margin-top: 50px;\">
+      return if self.header.nil? || self.description.nil?
+      
+      <<~HTMLCODE
+      <div style="width: 100%;text-align: center;margin-top: 50px;">
          #{ header.nil? ? "" : "<span style=\"font-weight: bold;font-size: 20px;\">#{ header }</span>" }
          #{ description.nil? ? "" : description.split("\n").collect{|text| "<p>#{text.to_s}</p>" }.join }
-       </div><hr style=\"margin-top: 70px; margin-bottom: 70px;\">" if !self.header.nil? || !self.description.nil?
+      </div><hr style="margin-top: 70px; margin-bottom: 70px;">
+      HTMLCODE
     end
 
     def build_sum_group_table(group_test)
-      "<div style=\"width: 100%; text-align: center; margin-top: 20px; margin-bottom: 20px;\">
-         <span style=\"align: center; font-weight: bold; font-size: 20px;\">Comparison summary</span>
-       </div>
+      <<~HTMLCODE
+      
+      <div style="width: 100%; text-align: center; margin-top: 20px; margin-bottom: 20px;">
+         <span style="align: center; font-weight: bold; font-size: 20px;">Comparison summary</span>
+      </div>
 
-       <div style=\"width: 100%; display: flex; margin-top: 30px;\">
-         <div style=\"width: 20%;\">
+      <div style="width: 100%; display: flex; margin-top: 30px;">
+         <div style="width: 20%;">
          </div>
-         <div style=\"width: 100%;\">
-           <table style=\"width:100%; border: 1px solid black; border-collapse: collapse; text-align: center;\">
-             <tr style=\"border: 1px solid black; border-collapse: collapse;\">
-               <th width=\"10%\" style=\"border: 1px solid black; border-collapse: collapse;\">client</th>
-               <th width=\"10%\" style=\"border: 1px solid black; border-collapse: collapse;\">time (sec)</th>
-               <th width=\"10%\" style=\"border: 1px solid black; border-collapse: collapse;\">clients/sec</th>
-               <th width=\"10%\" style=\"border: 1px solid black; border-collapse: collapse;\">average_time (ms)</th>
-               <th width=\"15%\" style=\"border: 1px solid black; border-collapse: collapse;\">min_time (ms)</th>
-               <th width=\"15%\" style=\"border: 1px solid black; border-collapse: collapse;\">max_time (ms)</th>
-               <th width=\"15%\" style=\"border: 1px solid black; border-collapse: collapse;\">success</th>
-               <th width=\"15%\" style=\"border: 1px solid black; border-collapse: collapse;\">error</th>
+         <div style="width: 100%;">
+           <table style="width:100%; border: 1px solid black; border-collapse: collapse; text-align: center;">
+             <tr style="border: 1px solid black; border-collapse: collapse;">
+               <th width="10%" style="border: 1px solid black; border-collapse: collapse;">client</th>
+               <th width="10%" style="border: 1px solid black; border-collapse: collapse;">time (sec)</th>
+               <th width="10%" style="border: 1px solid black; border-collapse: collapse;">clients/sec</th>
+               <th width="10%" style="border: 1px solid black; border-collapse: collapse;">average_time (ms)</th>
+               <th width="15%" style="border: 1px solid black; border-collapse: collapse;">min_time (ms)</th>
+               <th width="15%" style="border: 1px solid black; border-collapse: collapse;">max_time (ms)</th>
+               <th width="15%" style="border: 1px solid black; border-collapse: collapse;">success</th>
+               <th width="15%" style="border: 1px solid black; border-collapse: collapse;">error</th>
              </tr>
                 #{
                   group_data = group_test.tests.select{|test| test.is_run? }.collect{|test|
@@ -113,46 +119,49 @@ module GasLoadTester
                   max_max = group_data.collect{|test_data| test_data[4] }.sort.last
                   group_data.collect{|test_data|
                     test_data[5] = test_data[0] if test_data[5] > test_data[0]
-                    "<tr style=\"border: 1px solid black; border-collapse: collapse;\">
-                       <td style=\"border: 1px solid black; border-collapse: collapse;\">#{test_data[0]}</td>
-                       <td style=\"border: 1px solid black; border-collapse: collapse;\">#{test_data[1]}</td>
-                       <td style=\"border: 1px solid black; border-collapse: collapse;\">#{test_data[7]}</td>
-                       <td style=\"border: 1px solid black; border-collapse: collapse; #{ 
+                    <<~HTMLROW
+                    <tr style="border: 1px solid black; border-collapse: collapse;">
+                       <td style="border: 1px solid black; border-collapse: collapse;">#{test_data[0]}</td>
+                       <td style="border: 1px solid black; border-collapse: collapse;">#{test_data[1]}</td>
+                       <td style="border: 1px solid black; border-collapse: collapse;">#{test_data[7]}</td>
+                       <td style="border: 1px solid black; border-collapse: collapse; #{ 
                          if test_data[2] == min_avg
                            "color: green; font-weight:bold;"
                          elsif test_data[2] == max_avg
                            "color: red; font-weight:bold;"
                          end
-                       }\">#{test_data[2]}</td>
-                       <td style=\"border: 1px solid black; border-collapse: collapse; #{
+                       }">#{test_data[2]}</td>
+                       <td style="border: 1px solid black; border-collapse: collapse; #{
                          if test_data[3] == min_min
                            "color: green; font-weight:bold;"
                          elsif test_data[3] == max_min
                            "color: red; font-weight:bold;"
                          end
-                       }\">#{test_data[3]}</td>
-                       <td style=\"border: 1px solid black; border-collapse: collapse; #{
+                       }">#{test_data[3]}</td>
+                       <td style="border: 1px solid black; border-collapse: collapse; #{
                          if test_data[4] == min_max
                            "color: green; font-weight:bold;"
                          elsif test_data[4] == max_max
                            "color: red; font-weight:bold;"
                          end
-                       }\">#{test_data[4]}</td>
-                       <td style=\"border: 1px solid black; border-collapse: collapse; #{
+                       }">#{test_data[4]}</td>
+                       <td style="border: 1px solid black; border-collapse: collapse; #{
                          "color: green; font-weight:bold;" if test_data[0] == test_data[5]
-                       }\">#{test_data[5]}</td>
-                       <td style=\"border: 1px solid black; border-collapse: collapse; #{
+                       }">#{test_data[5]}</td>
+                       <td style="border: 1px solid black; border-collapse: collapse; #{
                          test_data[6] > 0 ? "color: red; font-weight:bold;" : "color: green; font-weight:bold;"
-                       }\">#{test_data[6]}</td>
-                     </tr>"
+                       }">#{test_data[6]}</td>
+                    </tr>
+                    HTMLROW
                   }.join
                 }
            </table>
          </div>
-         <div style=\"width: 20%;\">
+         <div style="width: 20%;">
          </div>
-       </div>
-       <hr style=\"margin-top: 70px; margin-bottom: 70px;\">"
+      </div>
+      <hr style="margin-top: 70px; margin-bottom: 70px;">
+      HTMLCODE
     end
 
     def build_sum_test(test)
