@@ -103,9 +103,9 @@ module GasLoadTester
                     [
                       test.client,
                       test.time,
-                      test.summary_avg_time.round(4),
-                      test.summary_min_time.round(4),
-                      test.summary_max_time.round(4),
+                      test.summary_avg_time.round(2),
+                      test.summary_min_time.round(2),
+                      test.summary_max_time.round(2),
                       test.summary_success,
                       test.summary_error,
                       test.request_per_second.round(2)
@@ -191,11 +191,11 @@ module GasLoadTester
              <tbody>
                <tr>
                  <th style="font-weight: bold;">Average</th>
-                 <td>#{avg_time.round(4)} ms</td>
+                 <td align="center">#{avg_time.round(2)} ms</td>
                </tr>
                <tr>
                  <th style="font-weight: bold;">Min/Max</th>
-                 <td>#{min_time.round(4)} / #{max_time.round(4)} ms</td>
+                 <td align="center">#{min_time.round(2)} – #{max_time.round(2)} ms</td>
                </tr>
              </tbody>
            </table>
